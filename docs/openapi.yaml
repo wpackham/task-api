@@ -5,6 +5,8 @@ info:
 servers:
   - url: http://localhost:3000
     description: Local development servers
+  - url: https://task-api-service-a42w.onrender.com/
+    description: Production server
 tags:
   - name: Tasks
     description: Task-related endpoints
@@ -16,6 +18,15 @@ paths:
       summary: List all tasks
       tags:
         - Tasks
+      parameters:
+        - name: completed
+          in: query
+          required: false
+          description: >
+            Filter tasks by completion status. Omit to return all tasks.
+          schema:
+            type: boolean
+          example: true
       responses:
         '200':
           description: OK
@@ -25,6 +36,19 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Task'
+        '400':
+          description: Bad request when the completed query parameter is not true or false
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: string
     post:
       summary: Create a new task
       tags:
